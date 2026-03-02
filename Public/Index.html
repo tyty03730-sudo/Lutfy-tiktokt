@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AI Real API</title>
+<style>
+body { font-family: Arial; background:#111; color:white; }
+#chat { height:300px; overflow:auto; border:1px solid #333; padding:10px; }
+input { width:80%; padding:10px; }
+button { padding:10px; }
+</style>
+</head>
+<body>
+
+<h2>AI Real API</h2>
+<div id="chat"></div>
+<input type="text" id="input" placeholder="Tulis pesan...">
+<button onclick="send()">Kirim</button>
+
+<script>
+async function send(){
+  let input = document.getElementById("input");
+  let chat = document.getElementById("chat");
+  let text = input.value;
+  if(!text) return;
+
+  chat.innerHTML += "<div><b>Kamu:</b> "+text+"</div>";
+  input.value = "";
+
+  let res = await fetch("/api/chat", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ message: text })
+  });
+
+  let data = await res.json();
+  chat.innerHTML += "<div><b>AI:</b> "+data.reply+"</div>";
+  chat.scrollTop = chat.scrollHeight;
+}
+</script>
+
+</body>
+  </html>
